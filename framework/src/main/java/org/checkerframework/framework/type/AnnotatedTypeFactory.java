@@ -501,7 +501,7 @@ public class AnnotatedTypeFactory implements AnnotationProvider {
     public boolean shouldCache;
 
     /** Size of LRU cache if one isn't specified using the atfCacheSize option. */
-    protected static final int DEFAULT_CACHE_SIZE = 300;
+    private static final int DEFAULT_CACHE_SIZE = 300;
 
     /** Mapping from a Tree to its annotated type; defaults have been applied. */
     private final Map<Tree, AnnotatedTypeMirror> classAndMethodTreeCache;
@@ -1424,7 +1424,7 @@ public class AnnotatedTypeFactory implements AnnotationProvider {
      *
      * @return cache size passed as argument to checker or DEFAULT_CACHE_SIZE
      */
-    protected int getCacheSize() {
+    protected final int getCacheSize() {
         String option = checker.getOption("atfCacheSize");
         if (option == null) {
             return DEFAULT_CACHE_SIZE;

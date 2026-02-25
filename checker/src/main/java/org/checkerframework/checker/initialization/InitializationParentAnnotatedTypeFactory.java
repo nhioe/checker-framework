@@ -115,11 +115,12 @@ public abstract class InitializationParentAnnotatedTypeFactory
     protected final boolean assumeInitialized;
 
     /** Cached @UnderInitialization annotation for Object.class. */
-    protected AnnotationMirror underInitializationObjectAnnotation;
+    protected final AnnotationMirror underInitializationObjectAnnotation;
 
     /** Cache for @UnderInitialization annotations. */
+    @SuppressWarnings("this-escape")
     private final Map<TypeMirror, AnnotationMirror> underInitializationAnnotationCache =
-            CollectionsPlume.createLruCache(DEFAULT_CACHE_SIZE);
+            CollectionsPlume.createLruCache(getCacheSize());
 
     /**
      * Create a new InitializationParentAnnotatedTypeFactory.
@@ -128,6 +129,7 @@ public abstract class InitializationParentAnnotatedTypeFactory
      *
      * @param checker the checker to which the new type factory belongs
      */
+    @SuppressWarnings("this-escape")
     public InitializationParentAnnotatedTypeFactory(BaseTypeChecker checker) {
         super(checker, true);
 
@@ -137,9 +139,9 @@ public abstract class InitializationParentAnnotatedTypeFactory
         NOT_ONLY_INITIALIZED = AnnotationBuilder.fromClass(elements, NotOnlyInitialized.class);
         POLY_INITIALIZED = AnnotationBuilder.fromClass(elements, PolyInitialized.class);
         FBCBOTTOM = AnnotationBuilder.fromClass(elements, FBCBottom.class);
-
         objectTypeMirror =
                 processingEnv.getElementUtils().getTypeElement("java.lang.Object").asType();
+        underInitializationObjectAnnotation = createUnderInitializationAnnotation(objectTypeMirror);
         unusedWhenElement = TreeUtils.getMethod(Unused.class, "when", 0, processingEnv);
         underInitializationValueElement =
                 TreeUtils.getMethod(UnderInitialization.class, "value", 0, processingEnv);
@@ -370,11 +372,6 @@ public abstract class InitializationParentAnnotatedTypeFactory
         if (superClass != null) {
             annotation = createUnderInitializationAnnotation(superClass);
         } else {
-            // Use Object as a valid super-class.
-            if (underInitializationObjectAnnotation == null) {
-                underInitializationObjectAnnotation =
-                        createUnderInitializationAnnotation(objectTypeMirror);
-            }
             annotation = underInitializationObjectAnnotation;
         }
         return annotation;
