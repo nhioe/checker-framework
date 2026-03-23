@@ -6,6 +6,7 @@ on:
   pull_request:
   push:
     branches: [ "master" ]
+  workflow_dispatch:
 
 # Configure GitHub Actions cancel in progress workflow to avoid redundant runs in pull requests.
 # See: https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs
