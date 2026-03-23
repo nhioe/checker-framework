@@ -483,19 +483,13 @@ public class NullnessNoInitTransfer
 
         // Handle Collection.isEmpty(), mark receiver as non-empty in the false branch
         if (nullnessTypeFactory.isCollectionIsEmpty(n)) {
-            AnnotatedTypeMirror receiverType = nullnessTypeFactory.getReceiverType(n.getTree());
-            AnnotatedDeclaredType queueType =
-                    AnnotatedTypes.asSuper(nullnessTypeFactory, receiverType, QUEUE_TYPE);
-            // Only track isEmpty status for Queues, for poll()
-            if (queueType != null) {
-                JavaExpression receiverExpr = JavaExpression.fromNode(receiver);
-                if (CFAbstractStore.canInsertJavaExpression(receiverExpr)) {
-                    NullnessNoInitStore thenStore = result.getThenStore();
-                    NullnessNoInitStore elseStore = result.getElseStore();
-                    elseStore.insertValue(receiverExpr, NONNULL);
-                    return new ConditionalTransferResult<>(
-                            result.getResultValue(), thenStore, elseStore);
-                }
+            JavaExpression receiverExpr = JavaExpression.fromNode(receiver);
+            if (CFAbstractStore.canInsertJavaExpression(receiverExpr)) {
+                NullnessNoInitStore thenStore = result.getThenStore();
+                NullnessNoInitStore elseStore = result.getElseStore();
+                elseStore.insertValue(receiverExpr, NONNULL);
+                return new ConditionalTransferResult<>(
+                        result.getResultValue(), thenStore, elseStore);
             }
         }
 
