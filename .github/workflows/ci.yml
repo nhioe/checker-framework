@@ -5,7 +5,8 @@ on:
     - cron: '0 7 * * *' # Runs daily at 2:00 AM EST
   pull_request:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "queue-test-2" ]
+  workflow_dispatch:
 
 # Configure GitHub Actions cancel in progress workflow to avoid redundant runs in pull requests.
 # See: https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs
